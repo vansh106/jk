@@ -1,216 +1,30 @@
 [
     {
-        "name": "MAX PIPES & FITTINGS INC",
-        "invoice_no": "3027/2924-25",
-        "GSTIN": "27ACJPJ6055F12K",
-        "date": "31-08-2024",
-        "total_amount": "4,32,699.00",
-        "transporter_name": "DELIVERY TAKEN BY BUYER",
-        "vehicle_no": "MHOGF5311",
-        "eway_bill_no": "211819007324",
-        "lr_no": "",
-        "igst": "",
-        "cgst": "33,002.49",
-        "sgst": "33,002.49",
-        "taxable_amount": "3,66,694.30",
-        "products": [
-            {
-                "product_details": "ALUMINIUM PLATE (6061 T6), SIZE: - 16 MM X 1250 MM X 2500 MM",
-                "hsn_code": "176061200",
-                "rate": "349.00",
-                "gst": "18%",
-                "nos": "2.00",
-                "quantity": "278.40 Kgs.",
-                "unit": "Kgs.",
-                "amount": "97,161.60"
-            },
-            {
-                "product_details": "ALUMINIUM PLATE (6061 T6), SIZE: - 20 MM X 1250 MM X 2500 MM",
-                "hsn_code": "76061200",
-                "rate": "349.00",
-                "gst": "18%",
-                "nos": "2.00",
-                "quantity": "346.50 Kgs.",
-                "unit": "Kgs.",
-                "amount": "1,20,928.50"
-            },
-            {
-                "product_details": "ALUMINIUM PLATE (6061 T6), SIZE: - 50 MM X 1250 MM X 2500 MM",
-                "hsn_code": "176061200",
-                "rate": "349.00",
-                "gst": "18%",
-                "nos": "1.00",
-                "quantity": "425.80 Kgs.",
-                "unit": "Kgs.",
-                "amount": "1,48,604.20"
-            }
-        ],
-        "series": "A"
-    },
-    {
-        "name": "BHARAT ALUMINIES COMPANY LIMITED",
-        "invoice_no": "1459019P10004015",
-        "GSTIN": "A1311N131",
-        "date": "Sep 12, 2021",
-        "total_amount": "700012730",
-        "transporter_name": "",
-        "vehicle_no": "",
+        "name": "BHARAT ALUMINIUM CO.",
+        "invoice_no": "BI039052/24-25",
+        "GSTIN": "27AAKFB2737K1ZM",
+        "date": "6-Aug-24",
+        "total_amount": "31,383.00",
+        "transporter_name": "MAAULI",
+        "vehicle_no": "MH04CG7559",
         "eway_bill_no": "",
         "lr_no": "",
         "igst": "",
-        "cgst": "",
-        "sgst": "",
-        "taxable_amount": "",
-        "products": [
-            {
-                "product_details": "Ural oyed Cole Rolec PT Cod \u2022GEO As ma",
-                "hsn_code": "19000",
-                "rate": "267.500",
-                "gst": "",
-                "nos": "",
-                "quantity": "",
-                "unit": "",
-                "amount": "377.710"
-            },
-            {
-                "product_details": "Ural oyed Cole Rol cc PT Cod GEQ As ma",
-                "hsn_code": "19000",
-                "rate": "267.500",
-                "gst": "",
-                "nos": "",
-                "quantity": "",
-                "unit": "",
-                "amount": "304.415"
-            },
-            {
-                "product_details": "Ural oved Hot Ao ec Plate Trimmed. GEO",
-                "hsn_code": "19000",
-                "rate": "277.750",
-                "gst": "",
-                "nos": "",
-                "quantity": "",
-                "unit": "",
-                "amount": "749.647 25"
-            },
-            {
-                "product_details": "Ural oyed Hot Rol cc Plate Trimmed. GEO",
-                "hsn_code": "19000",
-                "rate": "277.750",
-                "gst": "",
-                "nos": "",
-                "quantity": "",
-                "unit": "",
-                "amount": "316.912 75"
-            }
-        ],
-        "series": "A"
-    },
-    {
-        "name": "BHARAT ALUMINIUM COMPANY LIMITED",
-        "invoice_no": "BE22415205",
-        "GSTIN": "22AAACB4329K2ZT",
-        "date": "Sep 12, 2022",
-        "total_amount": "2031376.72",
-        "transporter_name": "",
-        "vehicle_no": "",
-        "eway_bill_no": "",
-        "lr_no": "98763110",
-        "igst": "",
-        "cgst": "52891.67",
-        "sgst": "52891.67",
-        "taxable_amount": "1695765.40",
-        "rounded_off_-": "",
+        "cgst": "2,393.62",
+        "sgst": "2,393.62",
+        "taxable_amount": "26,595.80",
+        "rounded_off_-": "0.04",
         "rounded_off_+": "",
         "products": [
             {
-                "product_details": "Unalloyed Cold Rolled PT Coil GEO As rm a 19000 Hz PARCOIL HMSDPE+GRAY (BAKCO)",
-                "hsn_code": "",
-                "rate": "267,500",
-                "gst": "",
-                "nos": "",
-                "quantity": "0.915 m",
-                "unit": "",
-                "amount": "377710"
-            },
-            {
-                "product_details": "Unalloyed Cold Rolled PT Coil GEO As rm a 19000 Hz PARCOILHMSDPE+GRAY (BAKCO)",
-                "hsn_code": "",
-                "rate": "267,500",
-                "gst": "",
-                "nos": "",
-                "quantity": "0.711 m",
-                "unit": "",
-                "amount": "304415"
-            },
-            {
-                "product_details": "Unalloyed Hot Rolled Plate Trimmed: GEO 19000 M Hess /HDPE",
-                "hsn_code": "",
-                "rate": "277,750",
-                "gst": "",
-                "nos": "",
-                "quantity": "2.723 m",
-                "unit": "",
-                "amount": "749647.25"
-            },
-            {
-                "product_details": "Unalloyed Hot Rolled Plate Trimmed: GEO 19000 M Hess /HDPE",
-                "hsn_code": "",
-                "rate": "277,750",
-                "gst": "",
-                "nos": "",
-                "quantity": "1.153 m",
-                "unit": "",
-                "amount": "316912.75"
-            }
-        ],
-        "series": "A"
-    },
-    {
-        "name": "MAX PIPES & FITTINGS INC",
-        "invoice_no": "3022/2024-25",
-        "GSTIN": "27ACJPJ6055F1ZK",
-        "date": "31-08-2024",
-        "total_amount": "4,32,699.00",
-        "transporter_name": "DELIVERY TAKEN BY BUYER",
-        "vehicle_no": "MH04GF5311",
-        "eway_bill_no": "211819007324",
-        "lr_no": "",
-        "igst": "",
-        "cgst": "33,002.49",
-        "sgst": "33,002.49",
-        "taxable_amount": "3,66,694.30",
-        "rounded_off_-": "0.28",
-        "rounded_off_+": "",
-        "products": [
-            {
-                "product_details": "ALUMINIUM PLATE (6061 T6)\nSIZE:- 16 MM X 1250 MM X 2500 MM",
-                "hsn_code": "76061200",
-                "rate": "349.00",
+                "product_details": "10518H30 (12 FT) HE/30 76.2X63.5 FLAT BAR",
+                "hsn_code": "76042930",
+                "rate": "96.700",
                 "gst": "18%",
-                "nos": "2.00",
-                "quantity": "278.40 Kgs",
-                "unit": "Kgs",
-                "amount": "97,161.60"
-            },
-            {
-                "product_details": "ALUMINIUM PLATE (6061 T6)\nSIZE:- 20 MM X 1250 MM X 2500 MM",
-                "hsn_code": "76061200",
-                "rate": "349.00",
-                "gst": "18%",
-                "nos": "2.00",
-                "quantity": "346.50 Kgs",
-                "unit": "Kgs",
-                "amount": "1,20,928.50"
-            },
-            {
-                "product_details": "ALUMINIUM PLATE (6061 T6)\nSIZE:- 50 MM X 1250 MM X 2500 MM",
-                "hsn_code": "76061200",
-                "rate": "349.00",
-                "gst": "18%",
-                "nos": "1.00",
-                "quantity": "425.80 Kgs",
-                "unit": "Kgs",
-                "amount": "1,48,604.20"
+                "nos": "2 Pcs",
+                "quantity": "274.00 kg",
+                "unit": "",
+                "amount": "26,455.80"
             }
         ],
         "series": "A"

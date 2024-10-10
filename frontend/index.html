@@ -178,25 +178,28 @@
     <div>
       <input type="checkbox" id="preprocess-checkbox" checked />
       <label for="preprocess-checkbox">Preprocess image</label>
-    </div> <br>
+    </div>
+    <br />
     <div>
       <label for="series-select">Select Series:</label>
       <select id="series-select">
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
       </select>
-  </div> <br>
+    </div>
+    <br />
     <!-- Button to navigate to task list -->
     <button id="task-list-btn" class="action-btn">View Task List</button>
 
     <script>
-    // Add this to your existing JavaScript
-    document.getElementById('task-list-btn').addEventListener('click', function() {
-        window.location.href = '/task-list';
-    });
+      // Add this to your existing JavaScript
+      document
+        .getElementById("task-list-btn")
+        .addEventListener("click", function () {
+          window.location.href = "/task-list";
+        });
     </script>
-
 
     <!-- Canvas to display the captured image (hidden, for processing) -->
     <canvas id="canvas"></canvas>
@@ -324,7 +327,7 @@
         const shouldPreprocess = document.getElementById(
           "preprocess-checkbox"
         ).checked;
-        console.log(shouldPreprocess)
+        console.log(shouldPreprocess);
         fetch("/preprocess", {
           method: "POST",
           headers: {
@@ -412,20 +415,27 @@
           },
           body: JSON.stringify({ images: preprocessedImages, series: series }),
         })
-          .then((response) => response.json())
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
           .then((data) => {
             hideLoading();
-            if (data.task_id) {
-              alert("Task added to queue.");
+            if (data.job_id) {
+              alert(`Task added to queue. Job ID: ${data.job_id}`);
               resetApplication();
             } else {
-              alert("Error submitting images for processing.");
+              alert(
+                "Error submitting images for processing: No job ID received."
+              );
             }
           })
           .catch((err) => {
             hideLoading();
-            console.error(err);
-            alert("Error submitting images for processing.");
+            console.error("Error submitting images for processing:", err);
+            alert(`Error submitting images for processing: ${err.message}`);
           });
       }
 

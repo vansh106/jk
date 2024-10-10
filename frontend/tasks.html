@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Status</title>
+
     <style>
-      /* Add your styles here */
       body {
         font-family: Arial, sans-serif;
         margin: 20px;
@@ -61,37 +62,55 @@
         font-weight: bold;
         cursor: pointer;
       }
+      #refresh-button {
+        margin: 10px 0;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      #error-message {
+        color: red;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
     <h1>Task Status</h1>
 
-    <!-- Switch to filter today's bills -->
     <label>
-      <input type="checkbox" id="today-switch" onchange="fetchTasks()" />
+      <input type="checkbox" id="today-switch" onchange="fetchTasks(true)" />
       Show Today's Bills Only
     </label>
 
-    <!-- Task Table -->
+    <button id="refresh-button" onclick="fetchTasks(true)">
+      Refresh Tasks
+    </button>
+
     <table id="tasks-table">
-      <tr>
-        <th>Bill No.</th>
-        <th>Time</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Result</th>
-        <th>Image</th>
-      </tr>
-      <!-- Rows will be inserted here -->
+      <thead>
+        <tr>
+          <th>Bill No.</th>
+          <th>Time</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Result</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody id="tasks-body">
+        <!-- Tasks will be inserted here -->
+      </tbody>
     </table>
 
-    <!-- Image Modal -->
+    <div id="error-message"></div>
+
     <div id="imageModal" class="image-modal">
       <span class="close">&times;</span>
       <img class="modal-content" id="modalImage" />
     </div>
 
     <script>
+      let lastUpdateTime = 0;
+
       function getStatusClass(state) {
         switch (state.toLowerCase()) {
           case "completed":
@@ -105,81 +124,85 @@
         }
       }
 
-      function fetchTasks() {
-        // Check if "Show Today's Bills Only" is enabled
+      function fetchTasks(forceUpdate = false) {
+        const currentTime = Date.now();
+        if (!forceUpdate && currentTime - lastUpdateTime < 5000) {
+          console.log("Skipping update, too soon");
+          return;
+        }
+
+        lastUpdateTime = currentTime;
         const todayOnly = document.getElementById("today-switch").checked;
         const url = todayOnly ? "/tasks?today=true" : "/tasks";
 
         fetch(url)
-          .then((response) => response.json())
-          .then((tasks) => {
-            const table = document.getElementById("tasks-table");
-            // Clear existing rows except the header
-            table.innerHTML = `
-                        <tr>
-                            <th>Bill No.</th>
-                            <th>Time</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Result</th>
-                            <th>Image</th>
-                        </tr>
-                    `;
-            tasks.forEach((task) => {
-              const row = table.insertRow();
-
-              // Bill No.
-              const billNoCell = row.insertCell(0);
-              billNoCell.innerText = task.bill_no;
-
-              // Time
-              const timeCell = row.insertCell(1);
-              timeCell.innerText = task.time;
-
-              // Date
-              const dateCell = row.insertCell(2);
-              dateCell.innerText = task.date;
-
-              // Status
-              const statusCell = row.insertCell(3);
-              statusCell.innerText = task.state;
-              statusCell.className = getStatusClass(task.state);
-
-              // Result
-              const resultCell = row.insertCell(4);
-              resultCell.className = "result";
-              if (task.result) {
-                try {
-                  const resultData = JSON.parse(task.result);
-                  resultCell.innerHTML = resultData.gpt_output || "No result";
-                } catch (e) {
-                  resultCell.innerText = "Error parsing result";
-                }
-              } else if (task.error) {
-                resultCell.innerText = `Error: ${task.error}`;
-              } else {
-                resultCell.innerText = "Pending...";
-              }
-
-              // Image
-              const imagesCell = row.insertCell(5);
-              if (task.image_paths && task.image_paths.length > 0) {
-                task.image_paths.forEach((imagePath) => {
-                  const img = document.createElement("img");
-                  img.src = imagePath;
-                  img.className = "task-image";
-                  img.onclick = () => openModal(imagePath);
-                  imagesCell.appendChild(img);
-                });
-              } else {
-                imagesCell.innerText = "No images";
-              }
-            });
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
           })
-          .catch((err) => console.error("Error fetching tasks:", err));
+          .then((tasks) => {
+            updateTaskTable(tasks);
+            document.getElementById("error-message").textContent = "";
+          })
+          .catch((err) => {
+            console.error("Error fetching tasks:", err);
+            document.getElementById(
+              "error-message"
+            ).textContent = `Error fetching tasks: ${err.message}`;
+          });
       }
 
-      // Image modal functions
+      function updateTaskTable(tasks) {
+        const tableBody = document.getElementById("tasks-body");
+        tableBody.innerHTML = ""; // Clear existing rows
+
+        tasks.forEach((task) => {
+          const row = tableBody.insertRow();
+
+          // Bill No.
+          row.insertCell(0).textContent = task.bill_no;
+
+          // Time
+          row.insertCell(1).textContent = task.time;
+
+          // Date
+          row.insertCell(2).textContent = task.date;
+
+          // Status
+          const statusCell = row.insertCell(3);
+          statusCell.textContent = task.state;
+          statusCell.className = getStatusClass(task.state);
+
+          // Result
+          const resultCell = row.insertCell(4);
+          resultCell.className = "result";
+          if (task.result) {
+            resultCell.textContent = task.result;
+          } else if (task.error) {
+            resultCell.textContent = `Error: ${task.error}`;
+          } else {
+            resultCell.textContent = "Pending...";
+          }
+
+          // Image
+          const imagesCell = row.insertCell(5);
+          if (task.image_paths && task.image_paths.length > 0) {
+            const imagePaths = JSON.parse(task.image_paths);
+            imagePaths.forEach((imagePath) => {
+              const img = document.createElement("img");
+              img.src = imagePath;
+              img.className = "task-image";
+              img.onclick = () => openModal(imagePath);
+              imagesCell.appendChild(img);
+            });
+          } else {
+            imagesCell.textContent = "No images";
+          }
+        });
+      }
+
       function openModal(imageSrc) {
         const modal = document.getElementById("imageModal");
         const modalImg = document.getElementById("modalImage");
@@ -193,8 +216,8 @@
       };
 
       // Fetch tasks on page load and every 10 seconds
-      fetchTasks();
-      setInterval(fetchTasks, 10000);
+      fetchTasks(true);
+      setInterval(() => fetchTasks(), 10000);
     </script>
   </body>
 </html>

@@ -7,9 +7,10 @@ import os
 import base64
 import cv2  # Add this import
 from tasks import process_images_task, preprocess_image
+import warnings
 
 app = Flask(__name__)
-
+warnings.filterwarnings("ignore", category=UserWarning, module="urllib3")
 # Initialize Redis connection
 redis_conn = Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379'))
 q = Queue(connection=redis_conn, is_async=True, default_timeout=3600)
@@ -126,7 +127,7 @@ def get_tasks():
             'ended_at': job.ended_at.isoformat() if job.ended_at else None,
         }
 
-        # You'll need to modify this part to match your actual job data structure
+        # Add this block to include more job metadata
         if job.meta:
             job_info.update({
                 'bill_no': job.meta.get('bill_no'),
@@ -135,6 +136,7 @@ def get_tasks():
                 'progress': job.meta.get('progress'),
                 'result': job.meta.get('result'),
                 'error': job.meta.get('error'),
+                'state': job.meta.get('state'),
             })
 
         if show_today_only and job_info.get('date') != current_date:
@@ -142,8 +144,8 @@ def get_tasks():
 
         tasks.append(job_info)
 
-    # Sort tasks by Bill No.
-    tasks.sort(key=lambda x: x.get('bill_no', 0))
+    # Sort tasks by Bill No. (descending order)
+    tasks.sort(key=lambda x: x.get('bill_no', 0), reverse=True)
 
     return jsonify(tasks)
 

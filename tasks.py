@@ -9,8 +9,9 @@ import requests
 from openai import OpenAI
 from dotenv import load_dotenv
 from rq import get_current_job
-
+import warnings
 load_dotenv()
+warnings.filterwarnings("ignore", category=UserWarning, module="urllib3")
 
 INVOICE_DB_PATH = "invoice.json"
 TEMP_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
@@ -120,13 +121,13 @@ def extract_table_from_image(image_paths):
             "type": "image_url",
             "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
         })
-
+    print("Sending messages to GPT")
     response = client.chat.completions.create(
         model=MODEL,
         messages=messages,
         max_tokens=2500
     )
-
+    print(response)
     return response.choices[0].message.content
 
 
@@ -210,6 +211,7 @@ def push_to_sheets(data):
 def process_images_task(image_paths, bill_no, time_str, date_str, series):
     job = get_current_job()
     try:
+        print("Starting GPT processing on images")
         job.meta['progress'] = 'Starting GPT processing on images'
         job.save_meta()
 
@@ -219,7 +221,6 @@ def process_images_task(image_paths, bill_no, time_str, date_str, series):
         job.save_meta()
 
         gpt_output = extract_table_from_image(combined_image_paths)
-
         job.meta['progress'] = 'GPT processing completed'
         job.save_meta()
 
@@ -228,6 +229,7 @@ def process_images_task(image_paths, bill_no, time_str, date_str, series):
         invoice_data = json.loads(gpt_output)
         invoice_data['series'] = series
         invoices = load_invoices()
+        print("sheets processing starting")
 
         existing_invoice_nos = {invoice['invoice_no'] for invoice in invoices}
         if invoice_data['invoice_no'] in existing_invoice_nos:
@@ -237,6 +239,7 @@ def process_images_task(image_paths, bill_no, time_str, date_str, series):
             invoices.append(invoice_data)
             save_invoices(invoices)
             sheets_data = prepare_sheets_data(invoice_data)
+            print("sheets processing completed")
 
             job.meta['progress'] = 'Data pushed to Google Sheets'
             job.save_meta()
@@ -252,6 +255,7 @@ def process_images_task(image_paths, bill_no, time_str, date_str, series):
             'image_paths': json.dumps(image_paths)
         })
         job.save_meta()
+        print(" processing completed")
 
         return result
 
