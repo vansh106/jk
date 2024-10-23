@@ -13,7 +13,7 @@ import threading
 from sheets import append_to_gsheet
 
 
-SERVICE_ACCOUNT_FILE = 'credentials.json'
+SERVICE_ACCOUNT_FILE = os.getenv('CREDENTIALS_PATH')
 
 # Create credentials from the service account file
 # The ID of the Google Sheet (found in the sheet URL)
