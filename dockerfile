@@ -32,5 +32,10 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Make the start script executable
 RUN chmod +x start.sh
 
+RUN pwd
+
+RUN ls -la
+
 # Command to run the application
 CMD ["./start.sh"]
+
