@@ -189,6 +189,15 @@
       </select>
     </div>
     <br />
+    <!-- Add this section for selecting scan type -->
+    <div>
+      <label for="scan-type-select">Select Scan Type:</label>
+      <select id="scan-type-select">
+        <option value="bills">Scan Bills</option>
+        <option value="visiting_cards">Scan Visiting Cards</option>
+      </select>
+    </div>
+    <br />
     <!-- Button to navigate to task list -->
     <button id="task-list-btn" class="action-btn">View Task List</button>
 
@@ -413,7 +422,11 @@
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ images: preprocessedImages, series: series }),
+          body: JSON.stringify({
+            images: preprocessedImages,
+            series: series,
+            scan_type: document.getElementById("scan-type-select").value,
+          }),
         })
           .then((response) => {
             if (!response.ok) {

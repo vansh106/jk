@@ -1,0 +1,30 @@
+[
+    {
+        "job_id": "97c86b97-3a1d-4e17-88dd-f208008a31b2",
+        "bill_no": 12,
+        "time": "18:03:19",
+        "date": "2024-10-10",
+        "state": "Queued",
+        "progress": "Queued",
+        "result": "",
+        "error": "",
+        "image_paths": [
+            "/Users/vanshbulani/Desktop/OCR/temp/processed_image_1728563599.337695_0.png"
+        ],
+        "series": "A"
+    },
+    {
+        "job_id": "1d59f80c-7e83-48be-8324-838438c5a8f6",
+        "bill_no": 1,
+        "time": "19:26:17",
+        "date": "2024-10-18",
+        "state": "Queued",
+        "progress": "Queued",
+        "result": "",
+        "error": "",
+        "image_paths": [
+            "/Users/vanshbulani/Desktop/OCR/temp/processed_image_1729259777.802385_0.png"
+        ],
+        "series": "A"
+    }
+]

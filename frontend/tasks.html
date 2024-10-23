@@ -92,6 +92,7 @@
           <th>Time</th>
           <th>Date</th>
           <th>Status</th>
+          <th>Progress</th>
           <th>Result</th>
           <th>Image</th>
         </tr>
@@ -175,8 +176,11 @@
           statusCell.textContent = task.state;
           statusCell.className = getStatusClass(task.state);
 
+          // Progress
+          row.insertCell(4).textContent = task.progress;
+
           // Result
-          const resultCell = row.insertCell(4);
+          const resultCell = row.insertCell(5);
           resultCell.className = "result";
           if (task.result) {
             resultCell.textContent = task.result;
@@ -187,10 +191,9 @@
           }
 
           // Image
-          const imagesCell = row.insertCell(5);
+          const imagesCell = row.insertCell(6);
           if (task.image_paths && task.image_paths.length > 0) {
-            const imagePaths = JSON.parse(task.image_paths);
-            imagePaths.forEach((imagePath) => {
+            task.image_paths.forEach((imagePath) => {
               const img = document.createElement("img");
               img.src = imagePath;
               img.className = "task-image";

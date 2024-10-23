@@ -1,13 +1,17 @@
 from flask import Flask, request, jsonify, send_from_directory
 from rq import Queue
 from redis import Redis
-from rq.worker import HerokuWorker as Worker
+from rq.worker import Worker
 from datetime import datetime
 import os
 import base64
-import cv2  # Add this import
-from tasks import process_images_task, preprocess_image
+import cv2
 import warnings
+import uuid
+from tasks import process_images_task, preprocess_image, add_task, update_task, remove_completed_tasks, load_tasks
+
+# Add this near the top of your app.py file, before initializing Redis or RQ
+os.environ['OBJC_DISABLE_INITIALIZE_FORK_SAFETY'] = 'YES'
 
 app = Flask(__name__)
 warnings.filterwarnings("ignore", category=UserWarning, module="urllib3")
@@ -17,10 +21,6 @@ q = Queue(connection=redis_conn, is_async=True, default_timeout=3600)
 
 # Path for storing temporary images
 TEMP_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
-
-# Ensure the temp folder exists
-if not os.path.exists(TEMP_FOLDER):
-    os.makedirs(TEMP_FOLDER)
 
 
 def save_base64_image(base64_str, filename):
@@ -70,6 +70,7 @@ def submit_task():
     data = request.json
     images_base64 = data.get('images')
     series = data.get('series')
+    scan_type = data.get('scan_type')  # Get the selected scan type
 
     if images_base64 and isinstance(images_base64, list):
         image_paths = []
@@ -77,18 +78,35 @@ def submit_task():
         date_str = datetime.now().strftime('%Y-%m-%d')
 
         for idx, image_base64 in enumerate(images_base64):
-            image_filename = f"""processed_image_{
-                datetime.now().timestamp()}_{idx}.png"""
+            image_filename = f"processed_image_{
+                datetime.now().timestamp()}_{idx}.png"
             image_path = save_base64_image(image_base64, image_filename)
             image_paths.append(image_path)
 
         bill_no = get_next_bill_no()
 
-        # Enqueue the task with RQ
-        job = q.enqueue(process_images_task, image_paths,
-                        bill_no, time_str, date_str, series)
+        # Create a task entry
+        task = {
+            'job_id': str(uuid.uuid4()),  # Generate a unique ID
+            'bill_no': bill_no,
+            'time': time_str,
+            'date': date_str,
+            'state': 'Queued',
+            'progress': 'Queued',
+            'result': '',
+            'error': '',
+            'image_paths': image_paths,
+            'series': series,
+            'scan_type': scan_type  # Store the scan type
+        }
+        add_task(task)
 
-        return jsonify({'job_id': job.id}), 202
+        # Enqueue the task with RQ
+        job = q.enqueue(
+            # Pass scan_type
+            process_images_task, task['job_id'], image_paths, bill_no, time_str, date_str, series, scan_type)
+
+        return jsonify({'job_id': task['job_id']}), 202
 
     return jsonify({'error': 'No images provided'}), 400
 
@@ -115,34 +133,10 @@ def get_tasks():
     show_today_only = request.args.get('today', 'false').lower() == 'true'
     current_date = datetime.now().strftime('%Y-%m-%d')
 
-    jobs = q.get_jobs()  # This gets all jobs, you might want to limit this
-    tasks = []
+    tasks = load_tasks()
 
-    for job in jobs:
-        job_info = {
-            'job_id': job.id,
-            'status': job.get_status(),
-            'enqueued_at': job.enqueued_at.isoformat() if job.enqueued_at else None,
-            'started_at': job.started_at.isoformat() if job.started_at else None,
-            'ended_at': job.ended_at.isoformat() if job.ended_at else None,
-        }
-
-        # Add this block to include more job metadata
-        if job.meta:
-            job_info.update({
-                'bill_no': job.meta.get('bill_no'),
-                'time': job.meta.get('time'),
-                'date': job.meta.get('date'),
-                'progress': job.meta.get('progress'),
-                'result': job.meta.get('result'),
-                'error': job.meta.get('error'),
-                'state': job.meta.get('state'),
-            })
-
-        if show_today_only and job_info.get('date') != current_date:
-            continue
-
-        tasks.append(job_info)
+    if show_today_only:
+        tasks = [task for task in tasks if task.get('date') == current_date]
 
     # Sort tasks by Bill No. (descending order)
     tasks.sort(key=lambda x: x.get('bill_no', 0), reverse=True)

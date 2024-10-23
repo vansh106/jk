@@ -28,5 +28,35 @@
             }
         ],
         "series": "A"
+    },
+    {
+        "name": "Kiran Metal Corporation",
+        "invoice_no": "KMC/24-25/3228",
+        "GSTIN": "27AADFK1887C1ZE",
+        "date": "12-Aug-24",
+        "total_amount": "1,38,892.00",
+        "transporter_name": "",
+        "vehicle_no": "",
+        "eway_bill_no": "",
+        "lr_no": "",
+        "igst": "",
+        "cgst": "10,593.45",
+        "sgst": "10,593.45",
+        "taxable_amount": "",
+        "rounded_off_-": "",
+        "rounded_off_+": "0.10",
+        "products": [
+            {
+                "product_details": "Aluminium Plate - 8.00 x 1250 x 2500",
+                "hsn_code": "76061190",
+                "rate": "285.00",
+                "gst": "",
+                "nos": "",
+                "quantity": "413.000 Nos",
+                "unit": "",
+                "amount": "1,17,705.00"
+            }
+        ],
+        "series": "A"
     }
 ]
