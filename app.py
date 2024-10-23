@@ -78,8 +78,8 @@ def submit_task():
         date_str = datetime.now().strftime('%Y-%m-%d')
 
         for idx, image_base64 in enumerate(images_base64):
-            image_filename = f"processed_image_{
-                datetime.now().timestamp()}_{idx}.png"
+            image_filename = f"""processed_image_{
+                datetime.now().timestamp()}_{idx}.png"""
             image_path = save_base64_image(image_base64, image_filename)
             image_paths.append(image_path)
 
