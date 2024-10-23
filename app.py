@@ -22,6 +22,22 @@ q = Queue(connection=redis_conn, is_async=True, default_timeout=3600)
 # Path for storing temporary images
 TEMP_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp')
 
+def run_shell_command(command):
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=True)
+    return result.stdout.strip(), result.stderr.strip()
+
+# Run pwd and ls commands
+current_directory, pwd_error = run_shell_command('pwd')
+files_list, ls_error = run_shell_command('ls -la')
+
+# Print the results to the console (or handle errors if needed)
+print("Current Directory:", current_directory)
+if pwd_error:
+    print("Error running pwd:", pwd_error)
+
+print("Files and Directories:\n", files_list)
+if ls_error:
+    print("Error running ls:", ls_error)
 
 def save_base64_image(base64_str, filename):
     image_data = base64.b64decode(base64_str.split(',')[1])
